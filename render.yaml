@@ -1,0 +1,7 @@
+services:
+  # 静的サイト(画面のファイルを配るだけ。サーバーのプログラムは動かさない)
+  - type: web
+    name: prototype-endurance
+    runtime: static
+    buildCommand: echo "ビルドはありません"
+    staticPublishPath: ./public

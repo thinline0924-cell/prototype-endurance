@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PROTOTYPE ENDURANCE</title>
+  <meta name="description" content="ル・マン・プロトタイプを操る3Dレースゲーム(キーボード操作)">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&family=Orbitron:wght@600;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id="view"></div>
+  <canvas id="hud" class="hidden"></canvas>
+  <div id="mirror" class="hidden"></div>
+
+  <!-- 起動中 -->
+  <div id="boot" class="overlay">
+    <div class="boot-box">
+      <div class="logo">PROTOTYPE <span>ENDURANCE</span></div>
+      <p id="bootText">読み込み中…</p>
+    </div>
+  </div>
+
+  <!-- メニュー -->
+  <div id="menu">
+    <header class="menu-head">
+      <div class="logo">PROTOTYPE <span>ENDURANCE</span></div>
+      <div class="sub">耐久レースの主役、プロトタイプカーで走る</div>
+      <button id="helpBtn" class="ghost-btn">操作方法</button>
+    </header>
+    <div class="menu-grid">
+      <section class="panel left">
+        <div id="carInfo" class="info"></div>
+        <div id="trackInfo" class="info"></div>
+        <div id="bestInfo" class="best"></div>
+      </section>
+      <section class="panel right">
+        <h2>マシン</h2>
+        <div id="carList" class="cards"></div>
+        <h2>コース</h2>
+        <div id="trackList" class="cards tracks"></div>
+        <h2>レース設定</h2>
+        <div class="opts">
+          <label>モード</label>
+          <div class="seg" id="optMode"><button data-v="race">レース</button><button data-v="ta">タイムアタック</button></div>
+          <label class="race-only">周回数</label>
+          <div class="seg race-only" id="optLaps"><button data-v="1">1</button><button data-v="3">3</button><button data-v="5">5</button><button data-v="10">10</button></div>
+          <label class="race-only">相手の台数</label>
+          <div class="seg race-only" id="optOpp"><button data-v="3">3</button><button data-v="5">5</button><button data-v="7">7</button><button data-v="9">9</button></div>
+          <label class="race-only">相手の速さ</label>
+          <div class="seg race-only" id="optDiff"><button data-v="easy">やさしい</button><button data-v="normal">ふつう</button><button data-v="hard">速い</button><button data-v="pro">プロ</button></div>
+          <label>時間帯</label>
+          <div class="seg" id="optTod"><button data-v="day">昼</button><button data-v="dusk">夕方</button><button data-v="night">夜</button></div>
+        </div>
+        <h2>運転の補助</h2>
+        <div class="opts">
+          <label>変速</label>
+          <div class="seg" id="optAuto"><button data-v="1">オートマ</button><button data-v="0">マニュアル</button></div>
+          <label>トラクション制御</label>
+          <div class="seg" id="optTcs"><button data-v="0">OFF</button><button data-v="1">弱</button><button data-v="2">中</button><button data-v="3">強</button></div>
+          <label>ABS</label>
+          <div class="seg" id="optAbs"><button data-v="1">ON</button><button data-v="0">OFF</button></div>
+          <label>ステアリング補助</label>
+          <div class="seg" id="optSteer"><button data-v="1">ON(おすすめ)</button><button data-v="0">OFF</button></div>
+          <label>画質</label>
+          <div class="seg" id="optQuality"><button data-v="low">軽い</button><button data-v="medium">標準</button><button data-v="high">高画質</button></div>
+        </div>
+        <button id="startBtn" class="start">スタート</button>
+      </section>
+    </div>
+  </div>
+
+  <!-- 操作方法 -->
+  <div id="help" class="overlay hidden">
+    <div class="dialog">
+      <h2>操作方法(キーボード)</h2>
+      <table class="keys">
+        <tr><td><kbd>↑</kbd> / <kbd>W</kbd></td><td>アクセル</td></tr>
+        <tr><td><kbd>↓</kbd> / <kbd>S</kbd></td><td>ブレーキ(止まって長押しでバック)</td></tr>
+        <tr><td><kbd>←</kbd> <kbd>→</kbd> / <kbd>A</kbd> <kbd>D</kbd></td><td>ハンドル</td></tr>
+        <tr><td><kbd>E</kbd> / <kbd>Shift</kbd></td><td>シフトアップ(マニュアル時)</td></tr>
+        <tr><td><kbd>Q</kbd> / <kbd>Z</kbd></td><td>シフトダウン(マニュアル時)</td></tr>
+        <tr><td><kbd>C</kbd></td><td>カメラ切り替え(追従・コクピット・ノーズ・TV)</td></tr>
+        <tr><td><kbd>V</kbd></td><td>後ろを見る(押している間)</td></tr>
+        <tr><td><kbd>R</kbd></td><td>コースに戻す(その周は無効)</td></tr>
+        <tr><td><kbd>M</kbd> / <kbd>T</kbd> / <kbd>B</kbd></td><td>オートマ⇔マニュアル / トラクション制御 / ABS</td></tr>
+        <tr><td><kbd>[</kbd> <kbd>]</kbd></td><td>ブレーキバランス(後ろ寄り / 前寄り)</td></tr>
+        <tr><td><kbd>H</kbd> / <kbd>N</kbd> / <kbd>G</kbd> / <kbd>U</kbd></td><td>ライト / バックミラー / ゴースト / 表示の切り替え</td></tr>
+        <tr><td><kbd>Esc</kbd> / <kbd>P</kbd></td><td>一時停止</td></tr>
+      </table>
+      <h3>うまく走るコツ</h3>
+      <ul>
+        <li>キーボードは「押す・離す」しかないので、アクセルとブレーキは<b>小刻みに押して</b>調整します。</li>
+        <li>コーナーの手前で、まっすぐのうちにブレーキ。曲がりながらの急ブレーキは後ろが滑ります。</li>
+        <li>ダウンフォース(空気で車を押さえつける力)のおかげで、速いコーナーほどよく曲がります。遅いコーナーは慎重に。</li>
+        <li>左下のタイヤ表示が赤いときは滑っています。ハンドルやアクセルを少し戻しましょう。</li>
+        <li>前の車の真後ろにつくと空気抵抗が減って速くなります(スリップストリーム)。</li>
+        <li>トラクション制御を OFF にすると、キーボードの「全開」で後輪が空転してスピンしやすくなります(上級者向け)。</li>
+        <li>ターボ車(G-962C)は、踏んでから一拍おいてパワーが出ます。早めにアクセルを。</li>
+      </ul>
+      <button id="helpClose" class="start small">閉じる</button>
+    </div>
+  </div>
+
+  <!-- 読み込み -->
+  <div id="loading" class="overlay hidden">
+    <div class="boot-box"><div class="spinner"></div><p id="loadingText">準備中…</p></div>
+  </div>
+
+  <!-- 一時停止 -->
+  <div id="pause" class="overlay hidden">
+    <div class="dialog small">
+      <h2>一時停止</h2>
+      <button id="resumeBtn" class="start small">再開</button>
+      <button id="restartBtn" class="ghost-btn">最初から</button>
+      <button id="quitBtn" class="ghost-btn">メニューへ</button>
+    </div>
+  </div>
+
+  <!-- 結果 -->
+  <div id="results" class="overlay hidden">
+    <div class="dialog">
+      <h2 id="resultsTitle">結果</h2>
+      <div id="resultsBody"></div>
+      <button id="resultsRetryBtn" class="start small">もう一度</button>
+      <button id="resultsMenuBtn" class="ghost-btn">メニューへ</button>
+    </div>
+  </div>
+
+  <script>
+    // 読み込めないときの日本語メッセージ
+    window.addEventListener('error', function (e) {
+      var t = document.getElementById('bootText');
+      if (t && !window.RG_BOOTED_OK) t.textContent = 'エラー:' + (e.message || '不明') + '(ページを再読み込みしてください)';
+    });
+    setTimeout(function () {
+      if (!(window.RG && window.RG.booted)) {
+        var t = document.getElementById('bootText');
+        if (t) t.innerHTML = '3D表示の部品(Three.js)を読み込めませんでした。<br>インターネットにつながっているか確認して、ページを再読み込みしてください。';
+      }
+    }, 20000);
+  </script>
+  <script type="module">
+    import * as THREE from 'three';
+    import { Sky } from 'three/addons/objects/Sky.js';
+    import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+    import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+    import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+    import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+    import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+    import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+    window.THREE = THREE;
+    window.RG = window.RG || {};
+    window.RG.X = { Sky, EffectComposer, RenderPass, UnrealBloomPass, OutputPass, mergeGeometries, RoomEnvironment };
+
+    // ゲーム本体のファイルを順番に読み込む(ビルド不要)
+    const files = ['util', 'data', 'track', 'physics', 'ai', 'textures', 'world', 'carmodel', 'input', 'audio', 'effects', 'hud', 'game'];
+    for (const f of files) {
+      await new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = 'js/' + f + '.js';
+        s.onload = resolve;
+        s.onerror = () => reject(new Error(f + '.js を読み込めませんでした'));
+        document.head.appendChild(s);
+      });
+    }
+    try {
+      await document.fonts.ready;
+    } catch (e) { /* フォントが無くても動く */ }
+    window.RG.Game.boot();
+    window.RG_BOOTED_OK = true;
+  </script>
+</body>
+</html>
