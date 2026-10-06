@@ -42,17 +42,18 @@
 
 ### PIT WALL の公開(Render)
 
-`render.yaml` に **2つ目のサイト `pit-wall-engineer`** を書いてあります。
-最初のゲーム(`prototype-endurance`)とは**別のサイト・別のアドレス**になるので、おたがいに影響しません。
+PIT WALL 専用の設計図 **`render-pitwall.yaml`** を使います(中身は `pit-wall-engineer` というサイト1つだけ)。
+`render.yaml`(PROTOTYPE ENDURANCE 用)とは別の Blueprint にすることで、おたがいの設定を書きかえません。
 
-- **すでに Blueprint で公開している場合**:GitHub にファイルを上げると、Render が `render.yaml` の変更を読み、
-  `pit-wall-engineer` が自動で追加されます。追加されないときは、Render の画面の **Blueprints** →
-  このリポジトリ → **Manual Sync**(手動で同期)を押してください
-- **まだ公開していない場合**:上の「公開のしかた」と同じ手順で、2つのサイトがまとめて作られます
-- 公開後のアドレスは `https://pit-wall-engineer-xxxx.onrender.com` のような形です
-  (Render の画面で `pit-wall-engineer` を開くと、上の方に表示されます)
+1. Render で **New +** → **Blueprint** → リポジトリ **prototype-endurance** を選ぶ
+2. **Blueprint Path**(設計図ファイルの場所)に `render-pitwall.yaml` と入力する
+3. **Apply** を押す
 
-入力する設定(環境変数)はありません。
+すでに `render.yaml` のまま Blueprint を作ってしまった場合:
+その Blueprint の **Settings** → **Blueprint Path** を `render-pitwall.yaml` に変えて保存し、**Manual Sync** を押してください。
+
+公開後のアドレスは `https://pit-wall-engineer-xxxx.onrender.com` のような形です
+(Render の画面で `pit-wall-engineer` を開くと、上の方に表示されます)。入力する設定(環境変数)はありません。
 
 ---
 
@@ -94,7 +95,8 @@
 | `public/js/hud.js` | メーター・ラップタイムなどの表示 |
 | `public/js/audio.js` | エンジン音などの合成 |
 | `public/js/ai.js` `game.js` `input.js` `effects.js` `textures.js` `util.js` | AI・ゲームの流れ・キー入力・煙や火花・質感・共通の道具 |
-| `render.yaml` | Render 用の設計図(静的サイト2つ:`public/` と `pitwall/`) |
+| `render.yaml` | Render 用の設計図(PROTOTYPE ENDURANCE:`public/`) |
+| `render-pitwall.yaml` | Render 用の設計図(PIT WALL:`pitwall/`)。別の Blueprint として使う |
 | `pitwall/index.html` `style.css` | PIT WALL の画面の骨組みと見た目(金縁のパネル・羊皮紙の手紙) |
 | `pitwall/js/data.js` | PIT WALL のチーム・コース・タイヤ・強化の数値 |
 | `pitwall/js/sim.js` | PIT WALL のレースの計算(天気・タイヤ・燃料・故障・ライバルの作戦) |

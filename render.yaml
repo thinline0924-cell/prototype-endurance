@@ -5,10 +5,3 @@ services:
     runtime: static
     buildCommand: echo "ビルドはありません"
     staticPublishPath: ./public
-
-  # レースエンジニアのゲーム「PIT WALL」。上とは別のサイト(別のアドレス)として公開する
-  - type: web
-    name: pit-wall-engineer
-    runtime: static
-    buildCommand: echo "ビルドはありません"
-    staticPublishPath: ./pitwall

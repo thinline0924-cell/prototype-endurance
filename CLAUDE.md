@@ -13,8 +13,10 @@
 
 ## 約束
 
-1. **サーバーのプログラムを入れない。** `public/` と `pitwall/` の静的ファイルだけで動く(Render は `runtime: static` のサイトを2つ)
+1. **サーバーのプログラムを入れない。** `public/` と `pitwall/` の静的ファイルだけで動く(Render は `runtime: static`)
    - 2つのゲームは別のサイト(別のアドレス)。おたがいのファイルを参照しない
+   - 設計図も別:`render.yaml` は PROTOTYPE ENDURANCE だけ、`render-pitwall.yaml` は PIT WALL だけ。
+     1つのファイルに両方を書くと、別の Blueprint から既存サイトの設定(ブランチなど)を書きかえようとしてしまう
 2. **ビルドツールを入れない。** 素の HTML / JavaScript。React・Vite・TypeScript・bundler などは使わない
 3. Three.js 0.170.0 を CDN(jsdelivr)から import map で読み込み、残りは `js/*.js` を順番に読む
 4. APIキー・秘密の設定は使わない

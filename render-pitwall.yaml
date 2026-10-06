@@ -1,0 +1,9 @@
+# PIT WALL(レースエンジニアのゲーム)専用の設計図。
+# PROTOTYPE ENDURANCE(render.yaml)とは別の Blueprint として使い、おたがいに影響しないようにする。
+services:
+  # 静的サイト(画面のファイルを配るだけ。サーバーのプログラムは動かさない)
+  - type: web
+    name: pit-wall-engineer
+    runtime: static
+    buildCommand: echo "ビルドはありません"
+    staticPublishPath: ./pitwall
