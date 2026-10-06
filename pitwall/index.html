@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PIT WALL ピットウォール物語</title>
+  <meta name="description" content="飛び出す絵本の中で、耐久レースチームのレースエンジニアになるゲーム">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Shippori+Mincho+B1:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <!-- 3Dの絵本(机の上) -->
+  <div id="stage"></div>
+  <div id="vignette"></div>
+
+  <!-- 起動中 -->
+  <div id="boot" class="boot">
+    <div class="boot-title">PIT WALL</div>
+    <p id="bootText">絵本をひらいています…</p>
+  </div>
+
+  <!-- 画面(中身は js/ui.js が作る) -->
+  <div id="ui"></div>
+
+  <!-- 判断カード(手紙) -->
+  <div id="letterWrap" class="letter-wrap hidden"><div id="letter" class="letter"></div></div>
+
+  <!-- 遊び方など -->
+  <div id="modalWrap" class="modal-wrap hidden"><div id="modal" class="panel modal"></div></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/sim.js"></script>
+  <script src="js/events.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/ui.js"></script>
+  <script type="module" src="js/scene.js"></script>
+</body>
+</html>

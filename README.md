@@ -28,6 +28,34 @@
 
 ---
 
+## もうひとつのゲーム「PIT WALL ピットウォール物語」(`pitwall/` フォルダ)
+
+運転はせず、**レースエンジニア**としてチームを勝たせるゲームです。
+机の上の「飛び出す絵本」の中でレースが進み、あなたは無線とピットの作戦で戦います。
+
+- 天気予報(先ほどあてにならない)・雨・路面の濡れ具合に合わせたタイヤ選び
+- 燃料・タイヤの減り・ドライバーの体力・マシンの故障を見ながらピットの予定を立てる
+- 「エンジン温度が上昇」「セーフティカー出動」「スポンサーからの電話」などの手紙で判断を迫られる
+- ライバル9チームもタイヤ交換・パンク・故障・リタイアをする。タイミングタワーで偵察できる
+- 全3戦のシーズン。賞金でエンジン・空力・ピットクルーなどを強くしてチャンピオンを目指す
+- 記録はそのブラウザの中(localStorage の `pw.save`)に保存されます
+
+### PIT WALL の公開(Render)
+
+`render.yaml` に **2つ目のサイト `pit-wall-engineer`** を書いてあります。
+最初のゲーム(`prototype-endurance`)とは**別のサイト・別のアドレス**になるので、おたがいに影響しません。
+
+- **すでに Blueprint で公開している場合**:GitHub にファイルを上げると、Render が `render.yaml` の変更を読み、
+  `pit-wall-engineer` が自動で追加されます。追加されないときは、Render の画面の **Blueprints** →
+  このリポジトリ → **Manual Sync**(手動で同期)を押してください
+- **まだ公開していない場合**:上の「公開のしかた」と同じ手順で、2つのサイトがまとめて作られます
+- 公開後のアドレスは `https://pit-wall-engineer-xxxx.onrender.com` のような形です
+  (Render の画面で `pit-wall-engineer` を開くと、上の方に表示されます)
+
+入力する設定(環境変数)はありません。
+
+---
+
 ## 遊び方
 
 キーボードで操作します。メニュー右上の「操作方法」にも一覧があります。
@@ -66,5 +94,11 @@
 | `public/js/hud.js` | メーター・ラップタイムなどの表示 |
 | `public/js/audio.js` | エンジン音などの合成 |
 | `public/js/ai.js` `game.js` `input.js` `effects.js` `textures.js` `util.js` | AI・ゲームの流れ・キー入力・煙や火花・質感・共通の道具 |
-| `render.yaml` | Render 用の設計図(静的サイト) |
+| `render.yaml` | Render 用の設計図(静的サイト2つ:`public/` と `pitwall/`) |
+| `pitwall/index.html` `style.css` | PIT WALL の画面の骨組みと見た目(金縁のパネル・羊皮紙の手紙) |
+| `pitwall/js/data.js` | PIT WALL のチーム・コース・タイヤ・強化の数値 |
+| `pitwall/js/sim.js` | PIT WALL のレースの計算(天気・タイヤ・燃料・故障・ライバルの作戦) |
+| `pitwall/js/events.js` | 無線の手紙(判断カード)の中身 |
+| `pitwall/js/scene.js` | 机の上の飛び出す絵本(3D) |
+| `pitwall/js/ui.js` `icons.js` | 画面の切りかえ・ボタン・レース中の表示 |
 | `CLAUDE.md` | Claude Code が作業するときのルール |
